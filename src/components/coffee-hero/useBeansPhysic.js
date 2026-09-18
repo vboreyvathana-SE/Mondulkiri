@@ -18,7 +18,7 @@ export function useBeanPhysics() {
 
         const beans = [];
         let beanCount = 0;
-        const maxBeans = 150;
+        const maxBeans = 100;
 
         function spawnBean() {
             if (beanCount >= maxBeans) return;

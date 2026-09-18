@@ -1,4 +1,5 @@
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import { CoffeeHero } from './components/coffee-hero/Coffee_hero'
 
 export default function App() {
@@ -6,6 +7,7 @@ export default function App() {
     <>
       <Navbar/>
       <CoffeeHero/>
+      <Footer/>
     </>
   )
 }
