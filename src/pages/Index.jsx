@@ -1,9 +1,17 @@
-import React from 'react'
+import { CoffeeHero } from '../components/coffee-hero/Coffee_hero'
+import { BrewingGuide } from '../components/index_desc/BrewingGuide'
+import Desc from '../components/index_desc/Desc'
+import { FeatureSection } from '../components/index_desc/Feature'
+import { Roastery } from '../components/index_desc/Roastery'
 
 export default function Index() {
   return (
-    <div>
-      
-    </div>
+    <main>
+      <CoffeeHero/>
+      <Desc/>
+      <FeatureSection/>
+      <BrewingGuide/>
+      <Roastery/>
+    </main>
   )
 }

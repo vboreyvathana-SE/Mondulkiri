@@ -1,9 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Outfit:wght@100..900&family=Space+Grotesk:wght@300..700&display=swap');
 @import "tailwindcss";
 
-@theme{
+@theme {
     --font-head: "News-reader", serif;
     --font-body: "Outfit", sans-serif;
     --font-label: "Space Grotesk", sans-serif;
 }
 
+@utility main-background {
+    background-image: linear-gradient(to right, #120b08, #1a110d, #211611);
+}
+
+@utility hover-up {
+    @apply transition-all duration-300 ease-in-out;
+
+    &:hover {
+        @apply -translate-y-1;
+    }
+}

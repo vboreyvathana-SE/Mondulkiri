@@ -1,12 +1,12 @@
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
-import { CoffeeHero } from './components/coffee-hero/Coffee_hero'
+import Index from './pages/Index'
 
 export default function App() {
   return (
     <>
       <Navbar/>
-      <CoffeeHero/>
+      <Index/>
       <Footer/>
     </>
   )
