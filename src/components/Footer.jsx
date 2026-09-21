@@ -50,7 +50,7 @@ function Footer() {
           <form action="" method='post'>
             <input className='p-1.5 rounded-xs border border-white/10
              bg-white/5 backdrop-blur-md' type="email" name='user_email' placeholder='Enter your email address' />
-            <button className='ml-1.5 p-1.5 rounded-xs bg-[#d99b43] text-white'>subscribe</button>
+            <button className='ml-1.5 p-1.5 uppercase font-semibold rounded-xs bg-[#d99b43] text-white'>subscribe</button>
           </form>
           <p className='text-[#837565] pt-3'>location</p>
           <p className='text-[#837565]'>Bousra Roastery • Sen Monorom • Mondulkiri, Cambodia</p>

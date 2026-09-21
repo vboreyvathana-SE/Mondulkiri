@@ -15,7 +15,7 @@ export function FeatureSection() {
               </span>
             </div>
 
-            <h2 className="font-head text-3xl md:text-4xl text-stone-100 font-medium leading-tight">
+            <h2 className="font-head text-3xl md:text-4xl text-stone-100 font-bold leading-tight">
               The Volcanic Red Loam of Sen Monorom
             </h2>
 
@@ -44,7 +44,7 @@ export function FeatureSection() {
           </div>
 
           {/* Image Container with Floating Badge */}
-          <div className="relative rounded-2xl overflow-hidden bg-stone-900 aspect-[4/3] border border-white/10 flex items-center justify-center">
+          <div className="relative rounded-2xl overflow-hidden bg-stone-900 aspect-4/3 border border-white/10 flex items-center justify-center">
             {/* Image Placeholder */}
             <span className="text-stone-600 font-label text-sm uppercase">Image Placeholder 01</span>
 
@@ -59,7 +59,7 @@ export function FeatureSection() {
         {/* ================= CARD 02 (Reversed Order on Desktop) ================= */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Image Container with Floating Badge (Order 2 on Mobile, 1 on Desktop) */}
-          <div className="order-2 lg:order-1 relative rounded-2xl overflow-hidden bg-stone-900 aspect-[4/3] border border-white/10 flex items-center justify-center">
+          <div className="order-2 lg:order-1 relative rounded-2xl overflow-hidden bg-stone-900 aspect-4/3 border border-white/10 flex items-center justify-center">
             {/* Image Placeholder */}
             <span className="text-stone-600 font-label text-sm uppercase">Image Placeholder 02</span>
 
@@ -86,7 +86,7 @@ export function FeatureSection() {
               </span>
             </div>
 
-            <h2 className="font-head text-3xl md:text-4xl text-stone-100 font-medium leading-tight">
+            <h2 className="font-head text-3xl md:text-4xl text-stone-100 font-bold leading-tight">
               The Artisanal Sun-Cured Red Honey Tables
             </h2>
 
@@ -127,7 +127,7 @@ export function FeatureSection() {
               </span>
             </div>
 
-            <h2 className="font-head text-3xl md:text-4xl text-stone-100 font-medium leading-tight">
+            <h2 className="font-head text-3xl md:text-4xl text-stone-100 font-bold leading-tight">
               The Indigenous Bunong Highland Collective
             </h2>
 
@@ -155,7 +155,7 @@ export function FeatureSection() {
           </div>
 
           {/* Image Container with Floating Badge */}
-          <div className="relative rounded-2xl overflow-hidden bg-stone-900 aspect-[4/3] border border-white/10 flex items-center justify-center">
+          <div className="relative rounded-2xl overflow-hidden bg-stone-900 aspect-4/3 border border-white/10 flex items-center justify-center">
             {/* Image Placeholder */}
             <span className="text-stone-600 font-label text-sm uppercase">Image Placeholder 03</span>
 

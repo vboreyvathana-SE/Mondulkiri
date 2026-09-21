@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 export default function Navbar() {
 
   return (
-    <header className="bg-linear-to-r from-[#120b08] to-[#18120f] text-white p-6 absolute top-0 left-0 right-0 z-10">
+    <header className="bg-linear-to-r from-[#120b08] to-[#18120f] text-white p-6 absolute top-0 left-0 right-0 z-10 ">
       <nav className="max-w-6xl mx-auto text-center flex justify-between items-center gap-2">
         <div>
           <Link to="/" className='flex justify-center items-center gap-2 text-xl'>

@@ -3,53 +3,43 @@ import { useRef, useEffect } from 'react';
 import Matter from 'matter-js';
 import { createBag } from './Baganimation';
 
-export function useBeanPhysics({ triggerThreshold = 0.3 } = {}) {
+const MAX_BEANS = 150;
+const BAKE_STEP_MS = 1000 / 60;   // fixed physics timestep while baking, independent of real time
+const SPAWN_EVERY_N_FRAMES = 2;   // ~ every 40ms at 60fps, matching the old real-time spawn rate
+const MAX_BAKE_FRAMES = 900;      // safety cap; baking normally finishes well before this
+ 
+export function useBeanPhysics({ scrubMultiplier = 1.5 } = {}) {
     const canvasRef = useRef(null);
  
     useEffect(() => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
  
+        // ---------- bake: run the whole sequence once, record every frame ----------
         const engine = Matter.Engine.create();
-        engine.enableSleeping = true; // resting beans go idle naturally instead of being frozen on a timer
+        engine.enableSleeping = true;
         const world = engine.world;
- 
-        const ground = Matter.Bodies.rectangle(400, 590, 810, 20, { isStatic: true });
-        Matter.World.add(world, ground);
+        Matter.World.add(world, Matter.Bodies.rectangle(400, 590, 810, 20, { isStatic: true }));
  
         const bag = createBag({ x: 400, restY: 150, tiltAngle: -1.1 });
+        let pouring = false;
+        bag.onPourStart = () => { pouring = true; };
  
         const beans = [];
-        let beanCount = 0;
-        const maxBeans = 150;
-        let spawnInterval = null;
- 
-        // beans only start falling once the bag has actually tipped into pour position
-        bag.onPourStart = () => {
-            spawnInterval = setInterval(spawnBean, 40);
-        };
  
         function spawnBean() {
-            if (beanCount >= maxBeans) return;
- 
-            // spawn point tracks the bag's own mouth, not a fixed screen coordinate
             const spout = bag.getSpoutPosition();
             const x = spout.x + (Math.random() * 50 - 25);
             const y = spout.y;
- 
-            // base radius before squashing into an oval — gives natural size variance bean-to-bean
             const baseRadius = 9 + Math.random() * 3;
  
             const bean = Matter.Bodies.circle(x, y, baseRadius, {
-                friction: 0.4,         // low enough that beans slide past each other instead of gripping on contact
-                frictionStatic: 0.5,   // a little above kinetic friction so a spread pile still comes to rest
-                restitution: 0.1,      // slight bounce nudges beans sideways on landing instead of stacking straight down
-                frictionAir: 0.02,     // a bit more drag than Matter's 0.01 default, reads as light beans, not dense balls
+                friction: 0.4,
+                frictionStatic: 0.5,
+                restitution: 0.1,
+                frictionAir: 0.02,
                 angle: Math.random() * Math.PI * 2,
             });
- 
-            // squash the circular hull into a gently rounded oval — matches the drawn shape
-            // and is close enough to round that beans pack into a spread pile, not a pyramid
             Matter.Body.scale(bean, 1.1, 0.9);
  
             const roastShades = ['#4a2f1c', '#3b2417', '#2e1a0f', '#55361f'];
@@ -59,86 +49,17 @@ export function useBeanPhysics({ triggerThreshold = 0.3 } = {}) {
  
             Matter.World.add(world, bean);
             beans.push(bean);
-            beanCount++;
- 
-            if (beanCount === maxBeans) {
-                clearInterval(spawnInterval);
-            }
         }
- 
-        let frameId;
-        function loop() {
-            Matter.Engine.update(engine, 1000 / 60);
- 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#555';
-            ctx.fillRect(400 - 405, 590 - 10, 810, 20);
-            drawPileBase();
- 
-            bag.update();
-            bag.draw(ctx);
- 
-            for (const bean of beans) {
-                const { x, y } = bean.position;
-                const angle = bean.angle;
-                const { rx, ry } = bean.plugin;
- 
-                // drop shadow — world space, scaled to this bean's own size, drawn before rotate()
-                // so it never spins with the bean
-                ctx.beginPath();
-                ctx.ellipse(x + 2, y + 3, rx * 0.9, ry * 0.85, 0, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-                ctx.fill();
- 
-                ctx.save();
-                ctx.translate(x, y);
-                ctx.rotate(angle);
- 
-                // bean body
-                ctx.beginPath();
-                ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
-                ctx.fillStyle = bean.plugin.color;
-                ctx.fill();
- 
-                // center crease — a physical groove in the bean's surface, so it correctly
-                // rotates WITH it, in local space
-                ctx.beginPath();
-                ctx.moveTo(0, -ry * 0.85);
-                ctx.quadraticCurveTo(2, 0, 0, ry * 0.85);
-                ctx.strokeStyle = '#1f120a';
-                ctx.lineWidth = 1;
-                ctx.stroke();
- 
-                ctx.restore();
- 
-                // specular highlight — comes from a fixed light source, so it's drawn in WORLD
-                // space and stays roughly put as the bean tumbles beneath it, rather than
-                // spinning with the bean's own rotation
-                ctx.beginPath();
-                ctx.ellipse(x - rx * 0.3, y - ry * 0.35, rx * 0.3, ry * 0.25, 0, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-                ctx.fill();
-            }
- 
-            frameId = requestAnimationFrame(loop);
-        }
- 
-        const SETTLE_SPEED = 0.5;
  
         function isSettled(bean) {
             if (bean.isSleeping) return true;
             const v = bean.velocity;
-            return Math.sqrt(v.x * v.x + v.y * v.y) < SETTLE_SPEED;
+            return Math.sqrt(v.x * v.x + v.y * v.y) < 0.5;
         }
  
-        function drawPileBase() {
-            const settledBeans = beans.filter(isSettled);
-            if (settledBeans.length === 0) return;
- 
+        function pileBinsFor(settledBeans) {
             const binWidth = 10;
-            const groundY = 580;
             const bins = new Map();
- 
             for (const bean of settledBeans) {
                 const binIndex = Math.floor(bean.position.x / binWidth);
                 const topY = bean.position.y - bean.plugin.ry;
@@ -146,68 +67,134 @@ export function useBeanPhysics({ triggerThreshold = 0.3 } = {}) {
                     bins.set(binIndex, topY);
                 }
             }
+            return [...bins.entries()].sort((a, b) => a[0] - b[0]);
+        }
  
-            const sortedBins = [...bins.entries()].sort((a, b) => a[0] - b[0]);
-            const minX = Math.min(...settledBeans.map(b => b.position.x));
-            const maxX = Math.max(...settledBeans.map(b => b.position.x));
+        const snapshots = [];
+        let frame = 0;
  
-            ctx.beginPath();
-            ctx.moveTo(minX - 10, groundY);
-            for (const [binIndex, topY] of sortedBins) {
-                ctx.lineTo(binIndex * binWidth + binWidth / 2, topY);
+        while (frame < MAX_BAKE_FRAMES) {
+            bag.update();
+ 
+            if (pouring && beans.length < MAX_BEANS && frame % SPAWN_EVERY_N_FRAMES === 0) {
+                spawnBean();
             }
-            ctx.lineTo(maxX + 10, groundY);
-            ctx.closePath();
-            ctx.fillStyle = '#1f130b';
-            ctx.fill();
+ 
+            Matter.Engine.update(engine, BAKE_STEP_MS);
+ 
+            const settledBeans = beans.filter(isSettled);
+ 
+            snapshots.push({
+                bagX: bag.x,
+                bagY: bag.y,
+                bagRotation: bag.rotation,
+                beans: beans.map((b) => ({
+                    x: b.position.x,
+                    y: b.position.y,
+                    angle: b.angle,
+                    rx: b.plugin.rx,
+                    ry: b.plugin.ry,
+                    color: b.plugin.color,
+                })),
+                pileBins: pileBinsFor(settledBeans),
+                pileMinX: settledBeans.length ? Math.min(...settledBeans.map((b) => b.position.x)) : null,
+                pileMaxX: settledBeans.length ? Math.max(...settledBeans.map((b) => b.position.x)) : null,
+            });
+ 
+            frame++;
+ 
+            // stop baking once every bean has spawned and the pile has come to rest —
+            // nothing after this point would look any different from the last frame
+            if (beans.length === MAX_BEANS && settledBeans.length === beans.length) {
+                break;
+            }
         }
  
-        // --- scroll trigger ---
-        // the whole sequence (bag drop -> tilt -> pour) only starts once the canvas has
-        // actually scrolled into view. IntersectionObserver alone isn't enough for that:
-        // it reports the current visibility the moment observe() is called, so a canvas
-        // that's already on-screen at page load (or on refresh) would fire immediately —
-        // "visible" and "scrolled to" are different things that happen to look the same
-        // when an element starts within the first screenful. hasScrolled gates on an
-        // actual scroll event so it waits for a real scroll rather than just a visible one.
-        let started = false;
-        let hasScrolled = window.scrollY > 0; // already mid-page on load (e.g. browser scroll restore) counts as scrolled
- 
-        function handleScroll() {
-            hasScrolled = true;
-            window.removeEventListener('scroll', handleScroll);
-        }
-        if (!hasScrolled) {
-            window.addEventListener('scroll', handleScroll, { passive: true });
+        // ---------- scrub: map scroll position to a baked frame and draw it ----------
+        function getProgress() {
+            const rect = canvas.getBoundingClientRect();
+            const vh = window.innerHeight || document.documentElement.clientHeight;
+            const totalDistance = vh + rect.height * scrubMultiplier;
+            const scrolled = vh - rect.top;
+            return Math.min(Math.max(scrolled / totalDistance, 0), 1);
         }
  
-        function start() {
-            if (started) return;
-            started = true;
-            loop();
+        function drawSnapshot(snapshot) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#555';
+            ctx.fillRect(400 - 405, 590 - 10, 810, 20);
+ 
+            if (snapshot.pileBins.length > 0) {
+                const groundY = 580;
+                ctx.beginPath();
+                ctx.moveTo(snapshot.pileMinX - 10, groundY);
+                for (const [binIndex, topY] of snapshot.pileBins) {
+                    ctx.lineTo(binIndex * 10 + 5, topY);
+                }
+                ctx.lineTo(snapshot.pileMaxX + 10, groundY);
+                ctx.closePath();
+                ctx.fillStyle = '#1f130b';
+                ctx.fill();
+            }
+ 
+            // reuse the bag's own draw() by feeding it this frame's recorded pose
+            bag.x = snapshot.bagX;
+            bag.y = snapshot.bagY;
+            bag.rotation = snapshot.bagRotation;
+            bag.draw(ctx);
+ 
+            for (const b of snapshot.beans) {
+                ctx.beginPath();
+                ctx.ellipse(b.x + 2, b.y + 3, b.rx * 0.9, b.ry * 0.85, 0, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+                ctx.fill();
+ 
+                ctx.save();
+                ctx.translate(b.x, b.y);
+                ctx.rotate(b.angle);
+                ctx.beginPath();
+                ctx.ellipse(0, 0, b.rx, b.ry, 0, 0, Math.PI * 2);
+                ctx.fillStyle = b.color;
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(0, -b.ry * 0.85);
+                ctx.quadraticCurveTo(2, 0, 0, b.ry * 0.85);
+                ctx.strokeStyle = '#1f120a';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                ctx.restore();
+ 
+                ctx.beginPath();
+                ctx.ellipse(b.x - b.rx * 0.3, b.y - b.ry * 0.35, b.rx * 0.3, b.ry * 0.25, 0, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+                ctx.fill();
+            }
         }
  
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting && hasScrolled) {
-                        start();
-                        observer.disconnect(); // one-shot — remove this line if it should replay every time it re-enters view
-                        window.removeEventListener('scroll', handleScroll);
-                    }
-                });
-            },
-            { threshold: triggerThreshold }
-        );
-        observer.observe(canvas);
+        let ticking = false;
+        function render() {
+            ticking = false;
+            const progress = getProgress();
+            const index = Math.min(Math.floor(progress * (snapshots.length - 1)), snapshots.length - 1);
+            drawSnapshot(snapshots[Math.max(index, 0)]);
+        }
+ 
+        function onScrollOrResize() {
+            if (!ticking) {
+                ticking = true;
+                requestAnimationFrame(render);
+            }
+        }
+ 
+        render(); // paint whatever state the current scroll position corresponds to, immediately
+        window.addEventListener('scroll', onScrollOrResize, { passive: true });
+        window.addEventListener('resize', onScrollOrResize);
  
         return () => {
-            observer.disconnect();
-            window.removeEventListener('scroll', handleScroll);
-            if (spawnInterval) clearInterval(spawnInterval);
-            cancelAnimationFrame(frameId);
+            window.removeEventListener('scroll', onScrollOrResize);
+            window.removeEventListener('resize', onScrollOrResize);
         };
-    }, [triggerThreshold]);
+    }, [scrubMultiplier]);
  
     return canvasRef;
 }

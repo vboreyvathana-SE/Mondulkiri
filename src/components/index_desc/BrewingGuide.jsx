@@ -25,7 +25,7 @@ export function BrewingGuide() {
               Precision Ritual
             </span>
             
-            <h2 className="font-head text-3xl md:text-4xl text-stone-100 font-medium leading-tight">
+            <h2 className="font-head text-3xl md:text-4xl text-stone-100 font-bold leading-tight">
               The Mondulkiri Artisan Brewing Guide
             </h2>
             

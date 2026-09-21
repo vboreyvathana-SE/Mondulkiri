@@ -11,7 +11,7 @@ return (
             Single Origin Philosophy
           </span>
           
-          <h2 className="font-head text-3xl md:text-4xl text-stone-100 font-medium leading-tight">
+          <h2 className="font-bold font-head text-3xl md:text-4xl text-stone-100 leading-tight">
             "From Cambodia's volcanic highland mist directly to your brewing kettle."
           </h2>
           

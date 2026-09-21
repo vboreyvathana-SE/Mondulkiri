@@ -1,8 +1,8 @@
-import { CoffeeHero } from '../components/coffee-hero/Coffee_hero'
+import  {CoffeeHero}  from '../components/coffee-hero/Coffee_hero'
 import { BrewingGuide } from '../components/index_desc/BrewingGuide'
 import Desc from '../components/index_desc/Desc'
 import { FeatureSection } from '../components/index_desc/Feature'
-import { Roastery } from '../components/index_desc/Roastery'
+import { VisitRoasteryBanner } from '../components/index_desc/Roastery'
 
 export default function Index() {
   return (
@@ -11,7 +11,7 @@ export default function Index() {
       <Desc/>
       <FeatureSection/>
       <BrewingGuide/>
-      <Roastery/>
+      <VisitRoasteryBanner/>
     </main>
   )
 }
