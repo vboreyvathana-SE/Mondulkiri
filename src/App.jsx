@@ -1,7 +1,7 @@
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Index from './pages/Index'
-import Test from '../service/Test'
+import Test from './services/Test'
 
 
 export default function App() {
