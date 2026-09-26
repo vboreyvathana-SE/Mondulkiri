@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Matter from "matter-js";
@@ -34,10 +34,9 @@ export function CoffeeHero() {
       }
     });
 
-    // DARKEN BEANS: Applies a brightness filter to the canvas context before rendering
     Matter.Events.on(render, 'beforeRender', () => {
       if (render.context) {
-        render.context.filter = 'brightness(0.55) contrast(1.15)'; // Lower brightness = darker beans
+        render.context.filter = 'brightness(0.55) contrast(1.15)';
       }
     });
 
@@ -57,17 +56,14 @@ export function CoffeeHero() {
 
     const tl = gsap.timeline({ paused: true });
 
-    // --------------------------------------------------------------------------
-    // ADJUST FLOAT HEIGHT HERE:
-    // Change '-0.50' to adjust float height (-0.4 = lower, -0.7 = higher)
-    // --------------------------------------------------------------------------
-    const floatHeightFactor = 0.50; 
+    // Lowered float height factor to 0.40
+    const floatHeightFactor = 0.40; 
 
     tl.to(bagRef.current, { y: -window.innerHeight * floatHeightFactor, duration: 2, ease: "power1.inOut" }, 0)
       .to("#quote-text", { opacity: 1, duration: 1 }, 0.5)
       .to(bagRef.current, { rotate: -45, duration: 1, ease: "power2.inOut" }, 2) 
       .to(bagRef.current, { rotate: 0, duration: 0.5, ease: "power2.inOut" }, 3) 
-      .to(bagRef.current, { y: 0, duration: 1.2, ease: "power3.in" }, 3.5)
+      .to(bagRef.current, { y: 5, duration: 1.2, ease: "power3.in" }, 3.5)
       .to("#brand-text", { opacity: 1, duration: 1 }, 3.5);
 
     let animationLocked = false;
@@ -122,7 +118,6 @@ export function CoffeeHero() {
     
     beanCountRef.current += 1;
 
-    // Adjusted spawn coordinates relative to the larger 420px tall bag
     const startX = window.innerWidth / 2 - 140; 
     const startY = window.innerHeight - 50 - (window.innerHeight * floatFactor) - 220; 
 
@@ -173,22 +168,22 @@ export function CoffeeHero() {
   }
 
   return (
-    <div ref={containerRef} className="relative w-full h-screen main-background overflow-hidden">
+    <div ref={containerRef} className="relative w-full h-screen main-bg overflow-hidden">
        
        <div className="absolute inset-0 flex items-center justify-between px-12 md:px-24 pointer-events-none z-10">
           <div className="text-left w-1/3 opacity-0" id="quote-text">
-             <h2 className="text-2xl md:text-4xl font-serif text-[#837565] italic">
+             <h2 className="text-2xl md:text-4xl font-serif text-[#3E2723] italic">
                "Elevating your morning... literally."
              </h2>
           </div>
           <div className="text-right w-1/3 opacity-0" id="brand-text">
-             <h1 className="text-4xl md:text-6xl font-serif text-[#837565] font-bold tracking-tight">
+             <h1 className="text-4xl md:text-6xl font-serif text-[#3E2723] font-bold tracking-tight">
                Mondulkiri
              </h1>
-             <h2 className="text-2xl md:text-3xl font-serif text-[#837565] mt-2">
+             <h2 className="text-2xl md:text-3xl font-serif text-[#3E2723] mt-2">
                Estate Coffee
              </h2>
-             <p className="text-md md:text-lg text-[#837565] mt-4 font-light tracking-widest uppercase">
+             <p className="text-md md:text-lg text-[#5D4037] mt-4 font-light tracking-widest uppercase">
                Premium Blend
              </p>
           </div>
@@ -198,13 +193,13 @@ export function CoffeeHero() {
           <canvas ref={canvasRef} className="w-full h-full" />
        </div>
 
-       <div className="absolute bottom-0 left-0 w-full h-[50px] bg-[#2d1b15] z-30 shadow-2xl"></div>
+       <div className="absolute bottom-0 left-0 w-full h-12.5 bg-[#2d1b15] z-30 shadow-2xl"></div>
 
-       <div className="absolute bottom-[50px] left-1/2 -translate-x-1/2 z-40" ref={bagRef}>
+       <div className="absolute bottom-12.5 left-1/2 -translate-x-1/2 z-40" ref={bagRef}>
           <img 
              src={bagImage} 
              alt="Mondulkiri Coffee Bag" 
-             className="w-[300px] h-[420px] object-contain drop-shadow-2xl"
+             className="w-75 h-105 object-contain drop-shadow-2xl"
           />
        </div>
     </div>

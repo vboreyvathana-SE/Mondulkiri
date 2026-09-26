@@ -7,8 +7,17 @@
     --font-label: "Space Grotesk", sans-serif;
 }
 
-@utility main-background {
+@utility main-bg {
     background-image: linear-gradient(to right, #120b08, #1a110d, #211611);
+}
+
+@utility light-bg{
+    background-image:linear-gradient(to right, #251d19, #1d1613)
+
+}
+
+@utility p-color{
+    text: #837565;
 }
 
 @utility hover-up {

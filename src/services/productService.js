@@ -1,7 +1,7 @@
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "http://localhost:8000";
 
 export async function getProducts() {
-    const response = await fetch(`${API_URL}/products/`);
+    const response = await fetch(`${API_URL}/products/index.php`);
 
     if (!response.ok) {
         throw new Error("Failed to fetch products");
@@ -11,3 +11,4 @@ export async function getProducts() {
 
     return result.data;
 }
+

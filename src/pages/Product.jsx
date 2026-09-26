@@ -1,9 +1,9 @@
-import React from 'react'
+import {Products} from '../components/product_componets/ProductCard'
 
 export default function Product() {
   return (
-    <div>
-      
-    </div>
+    <>
+        <Products/> 
+    </>
   )
 }
