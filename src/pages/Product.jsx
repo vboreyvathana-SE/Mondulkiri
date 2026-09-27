@@ -1,9 +1,11 @@
-import {Products} from '../components/product_componets/ProductCard'
+import Product_card from "../components/product_componets/Product_card";
 
-export default function Product() {
-  return (
-    <>
-        <Products/> 
-    </>
-  )
+function Product() {
+    return (
+        <>
+            <Product_card />
+        </>
+    );
 }
+
+export default Product;
