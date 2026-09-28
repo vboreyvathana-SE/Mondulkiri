@@ -1,4 +1,4 @@
-import ProductCard from "../ProductCard";
+import Products from "../../components/product_componets/Products";
 
 export default function Card() {
     return (
@@ -24,7 +24,7 @@ export default function Card() {
 
             <div className="w-5/6 h-1 bg-[#27221b] mx-auto mb-8"></div>
 
-            <ProductCard limit={3} />
+            <Products limit={3} />
 
         </section>
     );
