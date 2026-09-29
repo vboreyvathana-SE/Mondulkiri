@@ -70,14 +70,12 @@ export default function Navbar() {
           </button>
 
           <button>
-
             <Link to="/profile">
 
               <FontAwesomeIcon icon={faUser} className="p-3 rounded-2xl border border-white/10
              bg-white/5 backdrop-blur-md text-amber-500/90 shadow-lg cursor-pointer transition-all duration-300 
              hover:-translate-y-2.5 hover:bg-white/15 hover:border-amber-500/40 hover:text-amber-400 hover:shadow-amber-500/10"/>
             </Link>
-
           </button>
 
         </div>

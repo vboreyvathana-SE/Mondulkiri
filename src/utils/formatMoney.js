@@ -1,0 +1,1 @@
+export const formatMoney = (amount) => `$${Number(amount).toFixed(2)}`

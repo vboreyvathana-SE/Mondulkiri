@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { NavLink, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMugHot, faShieldHalved, faClock, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
@@ -112,10 +113,10 @@ export default function Subscription() {
             </div>
 
             {/* Join CTA Button */}
-            <button className="w-full bg-[#FCBA5F] hover:bg-[#e0a24d] text-[#120b08] font-label text-xs uppercase tracking-wider font-bold py-3.5 px-6 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg">
+            <Link to="login" className="w-full bg-[#FCBA5F] hover:bg-[#e0a24d] text-[#120b08] font-label text-xs uppercase tracking-wider font-bold py-3.5 px-6 rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg">
               <span>Join Roaster's Club</span>
               <FontAwesomeIcon icon={faArrowRight} className="text-xs" />
-            </button>
+            </Link>
           </div>
 
         </div>

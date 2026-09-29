@@ -1,16 +1,36 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBagShopping, faMugSaucer } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { getImageUrl } from '../services/productService';
+import { addItem } from '../services/cartService';
+
 
 
 export function ProductCard({ product }) {
+  const [added, setAdded] = useState(false);
+
+  async function handleAddToBag(e) {
+    // The card is wrapped in a <Link>, so stop the click from opening the detail page.
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await addItem({ product_id: product.id, grind: product.grind, quantity: 1 });
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
+    } catch (error) {
+      console.error("Failed to add to bag:", error);
+    }
+  }
+
   return (
-    <div className="bg-[#292321] rounded-lg overflow-hidden text-white shadow-lg cursor-pointer">
+    <Link to={`/products/${product.id}`} className="bg-[#292321] rounded-lg overflow-hidden text-white shadow-lg cursor-pointer">
       {/* Product Image */}
       <div className="relative aspect-square bg-[#171311] overflow-hidden">
         <img
-          src={`http://localhost:8000/${product.image}`}
+          src={getImageUrl(product.image)}
           alt={product.name}
-          className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
+          className="w-full h-full object-contain transition-transform duration-300 hover:scale-105 "
         />
 
         {product.product_code && (
@@ -85,11 +105,15 @@ export function ProductCard({ product }) {
           </div>
         </div>
 
-        <button className="mt-5 w-full bg-[#f5b44c] hover:bg-[#ffc15c] text-[#292321] rounded-md py-3 text-sm font-semibold transition">
-         <FontAwesomeIcon icon={faBagShopping} /> ADD TO BAG • ${product.price}
+        <button
+          type="button"
+          onClick={handleAddToBag}
+          className="mt-5 w-full bg-[#f5b44c] hover:bg-[#ffc15c] text-[#292321] rounded-md py-3 text-sm font-semibold transition"
+        >
+          <FontAwesomeIcon icon={faBagShopping} /> {added ? "ADDED ✓" : `ADD TO BAG • $${product.price}`}
         </button>
       </div>
-    </div>
+    </Link>
   );
 }
 
