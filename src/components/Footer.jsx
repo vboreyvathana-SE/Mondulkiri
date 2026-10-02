@@ -3,6 +3,17 @@ import { Link } from 'react-router-dom';
 function Footer() {
 
   return (
+      
+
+
+
+
+
+
+
+
+
+
     <div>
       <footer className='flex item-center justify-between p-12 bg-linear-to-r from-[#120b08] via-[#1a110d] to-[#211611] text-white gap-5'>
         <div className="max-w-md space-y-6">
@@ -68,12 +79,22 @@ function Footer() {
           <p>Fair Trade Charter</p>
           <p>Sustainability</p>
           <p>Ethical Sourcing</p>
+          
         </div>
       </div>
     </div>
+      
+
+
+
 
 
   )
 }
 
+
+
+
 export default Footer
+
+
