@@ -58,7 +58,7 @@ export default function InquiryForm() {
         <span className="font-label text-[10px] font-semibold uppercase tracking-widest text-[#fcba5f]">
           Schedule Tasting / Inquire
         </span>
-        <h2 className="font-head text-[26px] leading-[34px] font-medium text-[#ede0da]">
+        <h2 className="font-head text-[26px] leading-8.5 font-medium text-[#ede0da]">
           Cupping Room &amp; Terroir Liaison
         </h2>
         <p className="font-body text-[15px] leading-6 text-[#d5c4b1]">
@@ -138,7 +138,7 @@ export default function InquiryForm() {
               type="date"
               value={formData.targetDate}
               onChange={handleChange}
-              className={`${inputClasses} px-4 py-2 [color-scheme:dark]`}
+              className={`${inputClasses} px-4 py-2 scheme:dark`}
             />
           </FormField>
         </div>

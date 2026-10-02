@@ -38,7 +38,6 @@ function Footer() {
             <li className='pt-0.5 transition-all duration-300 hover:-translate-y-1 hover:text-[#FFEEDD]'> <Link to="#">Sen Monorom Highlands </Link></li>
             <li className='pt-0.5 transition-all duration-300 hover:-translate-y-1 hover:text-[#FFEEDD]'> <Link to="#">Phnong Farmer Partnership </Link></li>
             <li className='pt-0.5 transition-all duration-300 hover:-translate-y-1 hover:text-[#FFEEDD]'> <Link to="#">Phin & Pour-Over Ratios </Link></li>
-            <li className='pt-0.5 transition-all duration-300 hover:-translate-y-1 hover:text-[#FFEEDD]'> <Link to="#">Phin & Pour-Over Ratios </Link></li>
           </ul>
         </div>
 
@@ -61,7 +60,6 @@ function Footer() {
       <span className="flex w-5/6 h-1 bg-[#231A0F] mx-auto"></span>
     </div>
 
-
       <div className='bg-linear-to-r from-[#120b08] via-[#1a110d] to-[#211611] text-[#837565] p-12 flex justify-between items-center'>
         <p>© 2025 Mondulkiri Coffee Co. Preserving Cambodian Highland Terroir.</p>
         <div className='flex gap-2.5'>
@@ -71,7 +69,6 @@ function Footer() {
         </div>
       </div>
     </div>
-
 
   )
 }
