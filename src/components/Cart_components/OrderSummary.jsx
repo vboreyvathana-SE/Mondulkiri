@@ -39,7 +39,7 @@ export default function OrderSummary({ summary, promoError, onShippingChange, on
             <button
                 type='button'
                 onClick={onCheckout}
-                className='mt-4 w-full rounded-lg bg-[#f5b44c] py-3 text-sm font-bold uppercase text-[#292321] transition hover:bg-[#ffc15c]'
+                className='cursor-pointer mt-4 w-full rounded-lg bg-[#f5b44c] py-3 text-sm font-bold uppercase text-[#292321] transition hover:bg-[#ffc15c]'
             >
                 Proceed to encrypted dispatch →
             </button>

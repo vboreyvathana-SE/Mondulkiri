@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { getProductById, getImageUrl } from '../../services/productService'
 import { addItem } from '../../services/cartService'
 import { formatMoney as money } from '../../utils/formatMoney'
-import { getGrindOptions } from '../../utils/grinds'
+import { getGrindOptions } from '../../utils/grind'
 import QuantityStepper from '../shared/QuantityStepper'
 
 const SUBSCRIBE_DISCOUNT = 0.15
@@ -32,7 +32,7 @@ const FOOTER_NOTES = [
     'Purity sealed with one-way aromatic degassing membrane.',
 ]
 
-export default function ProductDetailSection() {
+export default function ProductDetailSection({ lotCount }) {
     const { id } = useParams() // route should look like /products/:id
 
     const [product, setProduct] = useState(null)
@@ -98,10 +98,14 @@ export default function ProductDetailSection() {
     }
 
     return (
-        <section>
+        <section className='main-bg'>
             {/* Breadcrumb + harvest tags */}
             <div className='uppercase flex items-center justify-between p-12'>
-                <div>
+                <p>
+                    <Link to='/products' className='hover:text-[#f5b44c]'>← Return to reserve shop</Link>
+                    {' / '}Reserve cellar ({lotCount} {lotCount === 1 ? 'lot' : 'lots'}){' / '}Highland dispatch
+                </p>
+                <div className='text-[#B5A9A4]'>
                     <p>Reserves / {product.product_type} / {product.name} ({product.product_code})</p>
                 </div>
                 <div className='flex'>
@@ -166,12 +170,12 @@ export default function ProductDetailSection() {
                         <p>{product.product_type}</p>
                         {extras.origin && <p>{extras.origin}</p>}
                     </div>
-                    <h1 className='font-head text-3xl'>{product.name}</h1>
+                    <h1 className='font-head text-3xl text-white font-bold'>{product.name}</h1>
 
                     <div className='p-2.5 rounded-xl'>
-                        <div className='flex bg-[#292321] items-start'>
-                            <h1 className='font-head text-sm md:text-lg lg:text-xl'>{money(price)}</h1>
-                            <p className='text-[#9b9897]'>/ {product.weight}</p>
+                        <div className='flex bg-[#292321] p-2.5 rounded-xl justify-baseline'>
+                            <h1 className='font-head text-lg md:text-xl lg:text-2xl text-[#FCBA5F] font-bold'>{money(price)}</h1>
+                            <p className='text-[#9b9897] items-end'>/ {product.weight}</p>
                         </div>
                         {extras.cuppingScore && (
                             <div className='bg-transparent backdrop-blur-lg'>
