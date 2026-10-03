@@ -11,6 +11,7 @@ import Cart from "./pages/Cart"
 import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
    
+import ProductDetail from "./pages/ProductDetail";
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/products" element={<Product />} />
+                <Route path="/products/:id" element={<ProductDetail />} />
                 <Route path="/services" element={<Service/>}/>
                 <Route path="/contact" element={<Contact/>}/>
                 <Route path="/cart" element={<Cart/>}/>
@@ -30,7 +32,6 @@ function App() {
             </Routes>
 
             <Footer />
-
         </>
     );
 }
