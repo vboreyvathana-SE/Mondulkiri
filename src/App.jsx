@@ -9,6 +9,8 @@ import Service from "./pages/Service"
 import Contact  from "./pages/Contact";
 import Cart from "./pages/Cart"
 import Profile from "./pages/Profile";
+import Auth from "./pages/Auth";
+   
 
 function App() {
     return (
@@ -22,6 +24,9 @@ function App() {
                 <Route path="/contact" element={<Contact/>}/>
                 <Route path="/cart" element={<Cart/>}/>
                 <Route path="/profile" element={<Profile/>}/>
+                <Route path="/login" element={<Auth />} />
+                <Route path="/register" element={<Auth initialTab="register" />} />
+
             </Routes>
 
             <Footer />
