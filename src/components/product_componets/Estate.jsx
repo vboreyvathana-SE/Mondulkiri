@@ -5,7 +5,7 @@ export default function Estate() {
   return (
     <section className="w-full bg-[#120b08] p-6 md:p-10">
       <div className="w-full bg-[#1a110d] border border-white/5 rounded-2xl p-8 md:p-12 shadow-2xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div  className="w-full bg-[#1a110d] border border-white/5 rounded-2xl p-8 md:p-12 shadow-2xl">
           
           {/* Left Side: Badges, Title, and Description */}
           <div className="lg:col-span-8 space-y-6">
