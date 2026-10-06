@@ -174,3 +174,9 @@ export function setShippingMethod(method) {
         state.shipping_method = method
     })
 }
+
+export function clearCart() {
+    const state = { lines: [], shipping_method: 'carbon-neutral', promo_code: null }
+    writeState(state)
+    return buildCart(state, new Map())
+}

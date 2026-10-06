@@ -33,8 +33,13 @@ export default function DispatchList({ dispatches, onViewAll }) {
       </div>
 
       <div className="flex flex-col gap-4">
-        {dispatches.items.map((order) => {
+        {dispatches.items.length === 0 ? (
+          <div className="rounded-lg bg-[#251e1b] p-4 font-body text-[13px] leading-5 text-[#d5c4b1]">
+            No purchases have been recorded for this account yet.
+          </div>
+        ) : dispatches.items.map((order) => {
           const delivered = order.status === "delivered";
+          const inTransit = order.status === "transit";
 
           return (
             <div
@@ -84,7 +89,7 @@ export default function DispatchList({ dispatches, onViewAll }) {
                     <span>Reorder</span>
                   </button>
                 </div>
-              ) : (
+              ) : inTransit ? (
                 <div className="flex items-center gap-2">
                   <div className="hidden flex-col text-right sm:flex">
                     <span className="font-label text-[10px] leading-[14px] font-semibold uppercase text-[#9e8e7e]">
@@ -96,6 +101,10 @@ export default function DispatchList({ dispatches, onViewAll }) {
                     <FontAwesomeIcon icon={faLocationArrow} className="text-[12px]" />
                     <span>Track Courier</span>
                   </button>
+                </div>
+              ) : (
+                <div className="rounded bg-[#302825] px-3 py-1.5 font-label text-[10px] font-semibold uppercase tracking-wider text-[#d5c4b1]">
+                  Purchase recorded
                 </div>
               )}
             </div>

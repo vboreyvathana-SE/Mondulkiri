@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link     } from 'react-router-dom'
 import { getProductById, getImageUrl } from '../../services/productService'
 import { addItem } from '../../services/cartService'
 import { formatMoney as money } from '../../utils/formatMoney'
@@ -100,7 +100,7 @@ export default function ProductDetailSection({ lotCount }) {
     return (
         <section className='main-bg'>
             {/* Breadcrumb + harvest tags */}
-            <div className='uppercase flex items-center justify-between p-12'>
+            <div className='uppercase flex items-center justify-between p-12 text-[#FFEEDD]'>
                 <p>
                     <Link to='/products' className='hover:text-[#f5b44c]'>← Return to reserve shop</Link>
                     {' / '}Reserve cellar ({lotCount} {lotCount === 1 ? 'lot' : 'lots'}){' / '}Highland dispatch

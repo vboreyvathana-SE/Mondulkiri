@@ -63,6 +63,7 @@ export default function UseCart() {
         removeItem: (id) => run(() => cartService.removeItem(id)),
         addToCart: (product) => run(() => cartService.addItem({ product_id: product.id, grind: product.grind })),
         setShipping: (method) => run(() => cartService.setShippingMethod(method)),
+        clearCart: () => run(() => cartService.clearCart()),
         applyPromo,
     }
 }

@@ -1,4 +1,10 @@
-import { tabs } from "./profileData";
+const tabs = [
+  { id: "overview", label: "Overview & Subscriptions" },
+  { id: "orders", label: "Order History & Cupping" },
+  { id: "sensory", label: "Flavor Profile & Sensory" },
+  { id: "addresses", label: "Addresses & Dispatch" },
+  { id: "perks", label: "Roastery Guild Perks" },
+];
 
 // The row of pill buttons. `active` is the id of the open tab.
 export default function ProfileTabs({ active, onChange }) {

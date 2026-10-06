@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import useCart from '../hooks/useCart'
 import CartHeader from '../components/Cart_components/CartHeader'
 import FreeDispatchBanner from '../components/Cart_components/FreeDispatchBanner'
@@ -8,7 +9,15 @@ import OrderSummary from '../components/Cart_components/OrderSummary'
 import IncludedGift from '../components/Cart_components/IncludedGift'
 import UpsellSection from '../components/Cart_components/Upsellsection'
 
+import { isLoggedIn } from '../components/auth_components/authSession'
+import { checkoutCart } from '../services/productService'
+
 export default function Cart() {
+    const navigate = useNavigate()
+    const [checkoutError, setCheckoutError] = useState('')
+    const [checkoutSuccess, setCheckoutSuccess] = useState('')
+    const [isCheckingOut, setIsCheckingOut] = useState(false)
+
     const {
         cart,
         loading,
@@ -21,16 +30,52 @@ export default function Cart() {
         addToCart,
         setShipping,
         applyPromo,
+        clearCart,
     } = useCart()
 
     if (loading) return <p className='main-bg p-12 text-[#D1C4BF]'>Loading your consignment...</p>
+
     if (error) return <p className='main-bg p-12 text-[#D1C4BF]'>{error}</p>
 
     const { items, summary } = cart
 
-    function handleCheckout() {
-        // Checkout / orders aren't built yet.
-        console.log('Checkout: not built yet')
+    async function handleCheckout() {
+        if (isCheckingOut) return
+
+        setCheckoutError('')
+        setCheckoutSuccess('')
+        setIsCheckingOut(true)
+
+        const loggedIn = await isLoggedIn();
+
+        if (!loggedIn) {
+            setIsCheckingOut(false)
+            navigate("/login", {
+                state: { from: "/cart" }
+            });
+            return;
+        }
+
+        try {
+            const result = await checkoutCart(items)
+            const cleared = await clearCart()
+
+            if (!cleared) {
+                throw new Error('Your order was recorded, but we could not clear the cart. Please refresh the page.')
+            }
+
+            setCheckoutSuccess(result.message || 'Your order has been recorded successfully.')
+        } catch (err) {
+            if (err.status === 401) {
+                navigate('/login', { state: { from: '/cart' } })
+                return
+            }
+
+            console.error('Checkout failed:', err)
+            setCheckoutError(err.message || 'We could not record your order. Please try again.')
+        } finally {
+            setIsCheckingOut(false)
+        }
     }
 
     return (
@@ -40,6 +85,14 @@ export default function Cart() {
 
                 {actionError && (
                     <p role='alert' className='mb-4 rounded-lg bg-red-950/60 p-3 text-sm text-red-300'>{actionError}</p>
+                )}
+
+                {checkoutError && (
+                    <p role='alert' className='mb-4 rounded-lg bg-red-950/60 p-3 text-sm text-red-300'>{checkoutError}</p>
+                )}
+
+                {checkoutSuccess && (
+                    <p role='status' className='mb-4 rounded-lg bg-emerald-950/60 p-3 text-sm text-emerald-300'>{checkoutSuccess}</p>
                 )}
 
                 {items.length === 0 ? (
@@ -68,6 +121,7 @@ export default function Cart() {
                                 onShippingChange={setShipping}
                                 onApplyPromo={applyPromo}
                                 onCheckout={handleCheckout}
+                                isCheckingOut={isCheckingOut}
                             />
                             <IncludedGift />
                         </aside>

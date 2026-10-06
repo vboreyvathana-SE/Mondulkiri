@@ -1,61 +1,87 @@
-// ============================================================================
-//  PLACEHOLDER, NOT REAL LOGIN.
-//  There is no backend connected yet, so these functions only pretend, like the
-//  mock cart does. The person who builds the API replaces the BODY of each
-//  function and keeps the names + what they return. Nothing else has to change.
-//
-//  How the forms use them:
-//   - loginUser / registerUser: if the request fails, `throw new Error("message")`
-//     and the form shows that message under the button.
-//   - isLoggedIn: the cart's "buy" button asks this. If false -> go to /login.
-//
-//  For now it saves { email, firstName } (never the password) in localStorage.
-//  To log out while testing: DevTools > Application > Local Storage > delete
-//  the key  mondulkiri_mock_user  (or call logoutUser() from the navbar later).
-// ============================================================================
+const API_URL = "http://localhost:8000";
 
-const SESSION_KEY = "mondulkiri_mock_user";
+export async function loginUser({ email, password }) {
+    const formData = new FormData();
 
-function saveSession(user) {
-  try {
-    localStorage.setItem(SESSION_KEY, JSON.stringify(user));
-  } catch {
-    // storage blocked: the fake login just won't stick
-  }
+    formData.append("email", email);
+    formData.append("password", password);
+
+    const response = await fetch(`${API_URL}/users/login.php`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.message || "Wrong email or password.");
+    }
+
+    return result;
 }
 
-export function isLoggedIn() {
-  try {
-    return localStorage.getItem(SESSION_KEY) !== null;
-  } catch {
-    return false;
-  }
+export async function registerUser({
+    firstName,
+    lastName,
+    email,
+    password,
+    accountType,
+}) {
+    const formData = new FormData();
+
+    formData.append("firstName", firstName);
+    formData.append("lastName", lastName);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("account_type", accountType);
+    formData.append("submit", "true");
+
+    const response = await fetch(`${API_URL}/users/register.php`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.message || "Could not create your account.");
+    }
+
+    return result;
 }
 
-// { email, password }
-export function loginUser(credentials) {
-  return new Promise(function (resolve) {
-    setTimeout(function () {
-      saveSession({ email: credentials.email });
-      resolve();
-    }, 700);
-  });
+export async function isLoggedIn() {
+    try {
+        const response = await fetch(`${API_URL}/Auth/check-auth.php`, {
+            method: "GET",
+            credentials: "include",
+        });
+
+        if (!response.ok) {
+            return false;
+        }
+
+        const result = await response.json();
+
+        return result.success === true;
+    } catch {
+        return false;
+    }
 }
 
-// { firstName, lastName, email, password, accountType }  (accountType is "consumer" or "reseller")
-export function registerUser(details) {
-  return new Promise(function (resolve) {
-    setTimeout(function () {
-      saveSession({ email: details.email, firstName: details.firstName, accountType: details.accountType });
-      resolve();
-    }, 700);
-  });
-}
+export async function logoutUser() {
+    const response = await fetch(`${API_URL}/users/logout.php`, {
+        method: "POST",
+        credentials: "include",
+    });
 
-export function logoutUser() {
-  try {
-    localStorage.removeItem(SESSION_KEY);
-  } catch {
-    // nothing to do
-  }
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.message || "Could not log out.");
+    }
+
+    return result;
 }

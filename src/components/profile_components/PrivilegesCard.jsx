@@ -7,6 +7,8 @@ export default function PrivilegesCard({ privileges }) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
+    if (!privileges.inviteLink) return;
+
     try {
       await navigator.clipboard.writeText(privileges.inviteLink);
       setCopied(true);
@@ -25,7 +27,11 @@ export default function PrivilegesCard({ privileges }) {
       </h3>
 
       <div className="flex flex-col gap-2">
-        {privileges.perks.map((perk) => (
+        {privileges.perks.length === 0 ? (
+          <p className="font-body text-[12px] leading-[18px] text-[#d5c4b1]">
+            No account privileges are recorded yet.
+          </p>
+        ) : privileges.perks.map((perk) => (
           <div
             key={perk.title}
             className="flex items-start gap-2 rounded p-1 transition-colors hover:bg-[#251e1b]"
@@ -51,7 +57,7 @@ export default function PrivilegesCard({ privileges }) {
             id="invite-link"
             type="text"
             readOnly
-            value={privileges.inviteLink}
+            value={privileges.inviteLink || "Not available"}
             className="w-full rounded bg-[#130d0a] px-2 py-1.5 font-label text-[11px] text-[#d5c4b2] outline-none select-all"
           />
           <button
@@ -59,7 +65,8 @@ export default function PrivilegesCard({ privileges }) {
             onClick={handleCopy}
             title="Copy invite link"
             aria-label={copied ? "Invite link copied" : "Copy invite link"}
-            className="cursor-pointer rounded bg-[#d99b43] p-1.5 text-[#563500] transition-colors hover:bg-[#fcba5f]"
+            disabled={!privileges.inviteLink}
+            className="cursor-pointer rounded bg-[#d99b43] p-1.5 text-[#563500] transition-colors hover:bg-[#fcba5f] disabled:cursor-not-allowed disabled:opacity-50"
           >
             <FontAwesomeIcon icon={copied ? faCheck : faCopy} className="w-4 text-[14px]" />
           </button>

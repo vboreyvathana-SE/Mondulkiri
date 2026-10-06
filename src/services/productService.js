@@ -33,3 +33,29 @@ export function getImageUrl(path) {
     if (!path) return "";
     return `${API_URL}/${encodeURI(path.replace(/^\/+/, ""))}`;
 }
+
+export async function checkoutCart(items) {
+    const response = await fetch(`${API_URL}/orders/checkout.php`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            items: items.map((item) => ({
+                product_id: item.product_id,
+                quantity: item.quantity,
+            })),
+        }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        const error = new Error(result.message || "Checkout failed");
+        error.status = response.status;
+        throw error;
+    }
+
+    return result;
+}

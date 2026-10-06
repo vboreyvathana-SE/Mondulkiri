@@ -30,7 +30,11 @@ export default function SubscriptionCard({ subscription }) {
       </div>
 
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-        {subscription.lots.map((lot) => (
+        {subscription.lots.length === 0 ? (
+          <div className="rounded-lg bg-[#251e1b] p-4 font-body text-[13px] leading-5 text-[#d5c4b1]">
+            There are no subscription lots to show for this account.
+          </div>
+        ) : subscription.lots.map((lot) => (
           <div
             key={lot.name}
             className="flex items-center gap-4 rounded-lg bg-[#251e1b] p-4 transition-colors hover:bg-[#302825]"

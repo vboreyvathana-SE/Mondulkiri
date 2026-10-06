@@ -2,7 +2,7 @@ import { formatMoney } from '../../utils/formatMoney'
 import ShippingOptions from './ShippingOptions'
 import PromoCodeInput from './PromoCodeInput'
 
-export default function OrderSummary({ summary, promoError, onShippingChange, onApplyPromo, onCheckout }) {
+export default function OrderSummary({ summary, promoError, onShippingChange, onApplyPromo, onCheckout, isCheckingOut }) {
     return (
         <div className='rounded-xl bg-[#292321] p-5'>
             <h2 className='font-head text-lg text-white'>Terrain Dispatch Bill</h2>
@@ -39,9 +39,10 @@ export default function OrderSummary({ summary, promoError, onShippingChange, on
             <button
                 type='button'
                 onClick={onCheckout}
-                className='cursor-pointer mt-4 w-full rounded-lg bg-[#f5b44c] py-3 text-sm font-bold uppercase text-[#292321] transition hover:bg-[#ffc15c]'
+                disabled={isCheckingOut}
+                className='cursor-pointer mt-4 w-full rounded-lg bg-[#f5b44c] py-3 text-sm font-bold uppercase text-[#292321] transition hover:bg-[#ffc15c] disabled:cursor-not-allowed disabled:opacity-60'
             >
-                Proceed to encrypted dispatch →
+                {isCheckingOut ? 'Recording your order…' : 'Proceed to encrypted dispatch →'}
             </button>
 
             <p className='mt-3 flex flex-wrap justify-between gap-2 text-[10px] uppercase text-[#9b9897]'>

@@ -24,7 +24,9 @@ export default function Card() {
 
             <div className="w-5/6 h-1 bg-[#27221b] mx-auto mb-8"></div>
 
-            <Products limit={3} />
+            <div className="max-w-350 mx-auto">
+                <Products limit={3} />
+            </div>
 
         </section>
     );

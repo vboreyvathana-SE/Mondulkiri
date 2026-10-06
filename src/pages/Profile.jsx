@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ProfileHeader from "../components/profile_components/ProfileHeader";
 import ProfileTabs from "../components/profile_components/ProfileTabs";
 import SubscriptionCard from "../components/profile_components/SubscriptionCard";
@@ -7,9 +8,11 @@ import FlavorProfile from "../components/profile_components/FlavorProfile";
 import PassCard from "../components/profile_components/PassCard";
 import DeliveryPoint from "../components/profile_components/DeliveryPoint";
 import PrivilegesCard from "../components/profile_components/PrivilegesCard";
-import { getProfile } from "../components/profile_components/profileService";
+import { isLoggedIn } from "../components/auth_components/authSession";
+import { getProfile } from "../services/profileService";
 
 export default function Profile() {
+  const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("overview");
@@ -17,19 +20,31 @@ export default function Profile() {
   useEffect(() => {
     let ignore = false;
 
-    getProfile()
-      .then((data) => {
+    async function loadProfile() {
+      const loggedIn = await isLoggedIn();
+
+      if (!loggedIn) {
+        if (!ignore) {
+          navigate("/login", { replace: true, state: { from: "/profile" } });
+        }
+        return;
+      }
+
+      try {
+        const data = await getProfile();
         if (!ignore) setProfile(data);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("Failed to load profile:", err);
-        if (!ignore) setError("We couldn't load your profile. Try again later.");
-      });
+        if (!ignore) setError(err instanceof Error ? err.message : "We couldn't load your profile. Try again later.");
+      }
+    }
+
+    loadProfile();
 
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [navigate]);
 
   if (error || !profile) {
     return (
