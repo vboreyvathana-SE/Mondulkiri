@@ -13,8 +13,9 @@ export default function Auth({ initialTab = "login" }) {
   const from = location.state?.from || "/";
   const comesFromCart = from === "/cart";
 
-  function handleSuccess() {
-    navigate(from, { replace: true });
+  function handleSuccess(result) {
+    const isAdmin = result?.user?.account_type === "admin";
+    navigate(isAdmin ? "/admin" : from, { replace: true });
   }
 
   return (

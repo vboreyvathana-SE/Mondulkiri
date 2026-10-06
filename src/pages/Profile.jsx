@@ -8,7 +8,7 @@ import FlavorProfile from "../components/profile_components/FlavorProfile";
 import PassCard from "../components/profile_components/PassCard";
 import DeliveryPoint from "../components/profile_components/DeliveryPoint";
 import PrivilegesCard from "../components/profile_components/PrivilegesCard";
-import { isLoggedIn } from "../components/auth_components/authSession";
+import { getCurrentSession } from "../components/auth_components/authSession";
 import { getProfile } from "../services/profileService";
 
 export default function Profile() {
@@ -21,12 +21,17 @@ export default function Profile() {
     let ignore = false;
 
     async function loadProfile() {
-      const loggedIn = await isLoggedIn();
+      const session = await getCurrentSession();
 
-      if (!loggedIn) {
+      if (!session) {
         if (!ignore) {
           navigate("/login", { replace: true, state: { from: "/profile" } });
         }
+        return;
+      }
+
+      if (session.account_type === "admin") {
+        if (!ignore) navigate("/admin", { replace: true });
         return;
       }
 

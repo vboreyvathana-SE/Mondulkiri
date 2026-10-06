@@ -52,7 +52,7 @@ export async function registerUser({
     return result;
 }
 
-export async function isLoggedIn() {
+export async function getCurrentSession() {
     try {
         const response = await fetch(`${API_URL}/Auth/check-auth.php`, {
             method: "GET",
@@ -60,15 +60,19 @@ export async function isLoggedIn() {
         });
 
         if (!response.ok) {
-            return false;
+            return null;
         }
 
         const result = await response.json();
 
-        return result.success === true;
+        return result.success === true ? result.user : null;
     } catch {
-        return false;
+        return null;
     }
+}
+
+export async function isLoggedIn() {
+    return (await getCurrentSession()) !== null;
 }
 
 export async function logoutUser() {

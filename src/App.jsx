@@ -10,6 +10,7 @@ import Contact  from "./pages/Contact";
 import Cart from "./pages/Cart"
 import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
+import Admin from "./pages/admin/Admin";
 
 import ProductDetail from "./pages/ProductDetail";
 
@@ -26,6 +27,7 @@ function App() {
                 <Route path="/contact" element={<Contact/>}/>
                 <Route path="/cart" element={<Cart/>}/>
                 <Route path="/profile" element={<Profile/>}/>
+                <Route path="/admin" element={<Admin/>}/>
                 <Route path="/register" element={<Auth initialTab="register" />} />
                 <Route path="/login" element={<Auth />} />
             </Routes>

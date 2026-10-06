@@ -35,8 +35,8 @@ export default function RegisterForm({ onSuccess }) {
     setError("");
 
     try {
-      await registerUser(formData);
-      onSuccess();
+      const result = await registerUser(formData);
+      onSuccess(result);
     } catch (err) {
       setError(err.message || "Could not create your account. Please try again.");
       setSending(false);

@@ -24,8 +24,8 @@ export default function LoginForm({ onSuccess }) {
     setError("");
 
     try {
-      await loginUser(formData);
-      onSuccess();
+      const result = await loginUser(formData);
+      onSuccess(result);
     } catch (err) {
       setError(err.message || "Could not sign you in. Please try again.");
       setSending(false);
